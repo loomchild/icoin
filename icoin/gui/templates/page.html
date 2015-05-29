@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Icoin - Page{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+	<h1>{{url}}</h1>
+</div>
+
+<div class="col-md-12">
+	<p>Would you like to claim {{amount}}€ from {{url}}?</p>
+	{{ wtf.quick_form(form, button_map={'yes': 'success', 'no': 'danger'}) }}
+</div>
+
+{% endblock %}
+

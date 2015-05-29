@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Icoin - Pledge{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+	<h1>Pledge</h1>
+</div>
+
+<div class="row">
+	<p>Code:</p> 
+	<textarea class="form-control" rows="3" readonly="readonly" onClick="this.setSelectionRange(0, this.value.length)">{{image}}</textarea>
+</div>
+
+
+{% endblock %}
+
+
