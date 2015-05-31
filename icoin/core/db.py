@@ -2,6 +2,8 @@ import uuid
 from flask.ext.sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import mapper
 from sqlalchemy.dialects.postgresql import UUID
+from flask.ext.migrate import Migrate
+
 from icoin import app
 from .model import Page
 
@@ -12,6 +14,7 @@ def init():
     db.init_app(app)
     # See http://piotr.banaszkiewicz.org/blog/2012/06/29/flask-sqlalchemy-init_app/, option 2
     db.app = app
+    migrate = Migrate(app, db)
 
 
 page_table = db.Table('page', 
