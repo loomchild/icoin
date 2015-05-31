@@ -7,7 +7,7 @@ addons:
 before_script:
   - psql -c 'create database icoin_test;' -U postgres
 
-install: "pip install -r requirements-dev.txt --use-mirrors"
+install: "pip install -r requirements-dev.txt"
 
 script: nose2
  
