@@ -5,6 +5,11 @@ from icoin import app
 
 class DefaultConfig:
     SECRET_KEY = 'B0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
+
+    HOST = "0.0.0.0"
+    PORT = 8080
+    THREADS = 1
+
     DB_HOST = "localhost"
     DB_PORT = "5432"
     DB_NAME = "icoin"
