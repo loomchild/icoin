@@ -2,9 +2,9 @@ from flask import Flask
 
 app = Flask(__name__)
 
-from .core import bootstrap
+from . import core
 
-bootstrap.init()
+core.init()
 
 from .api import api
 

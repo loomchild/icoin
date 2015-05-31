@@ -6,7 +6,7 @@ from flask_bootstrap import Bootstrap
 from icoin.core.image import get_image
 
 from . import gui
-from .forms import CreatePledgeForm, ClaimPageForm
+from .form import CreatePledgeForm, ClaimPageForm
 
 
 
