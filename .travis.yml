@@ -5,7 +5,7 @@ python:
 addons:
   postgresql: "9.4"
 before_script:
-  - psql -c 'create database icoin_test;' -U postgres
+  - psql -c 'create database icoin_testa;' -U postgres
 
 install: "pip install -r requirements-dev.txt"
 
