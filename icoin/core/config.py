@@ -1,4 +1,4 @@
-import subprocess, re
+import subprocess, re, os
 from icoin.util.homer import HOME
 from icoin import app
 
@@ -23,7 +23,6 @@ def init():
     app.config.update(get_env_vars())
     
     app.config['VERSION'] = get_version()
-    app.config['SQLALCHEMY_DATABASE_URI'] = get_db()
 
 
 def get_version():
@@ -39,32 +38,11 @@ def get_version():
         pass 
     return version
 
-def get_db():
-    user = app.config["DB_USER"]
-    password = app.config["DB_PASSWORD"]
-    host = app.config["DB_HOST"]
-    port = app.config["DB_PORT"]
-    name = app.config["DB_NAME"]
-
-    string = "postgresql://"
-    
-    if user: 
-        string += user
-        if password:
-            string += ":" + password
-        string += "@"
-
-    if host:
-        string += host
-
-    if port:
-        string += ":" + port
-
-    if name:
-        string += "/" + name
-
-    return string
-
 def get_env_vars():
-    return {}
+    env_vars = {}
+    for name in (n for n in dir(DefaultConfig) if not n.startswith("_")):
+        value = os.environ.get(name)
+        if value != None:
+            env_vars[name] = value
+    return env_vars
 
