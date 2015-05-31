@@ -22,6 +22,25 @@ def init():
 
     migrate = Migrate(app, db)
 
+def create(name):
+    "Create database if it does not exist"
+    url = get_url(app.config["DB_USER"], app.config["DB_PASSWORD"], 
+        app.config["DB_HOST"], app.config["DB_PORT"], "postgres")
+ 
+    engine = create_engine(url)
+    with engine.connect() as conn:
+ 
+        result = conn.execute(
+            "SELECT 1 FROM pg_catalog.pg_database WHERE datname='{}'"
+            .format(name))
+        if result.first():
+            return False
+        
+        conn.execute("COMMIT")
+        conn.execute("CREATE DATABASE {}".format(name))
+
+    return True
+
 def get_url(user, password, host, port, name):
     string = "postgresql://"
     
