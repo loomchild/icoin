@@ -1,14 +1,12 @@
 from nose.tools import *
 from . import *
-import icoin
 from icoin.core.db import db
 from icoin.core.model import Page
 
 
 class TestDB:
 
-    def setup(self):
-        self.app = icoin.app.test_client()
+    def setUp(self):
         clean_db()
     
     def test_db(self):
