@@ -6,7 +6,7 @@ from flask.ext.migrate import MigrateCommand
 
 from icoin import app
 from icoin import core
-from icoin.core import model, db, mail
+from icoin.core import model, db, queue, mail
 
 manager = Manager(app, with_default_commands=False)
 
@@ -17,7 +17,7 @@ def server():
             threads=app.config["THREADS"])
 
 def make_shell_context():
-    return dict(app=app, db=db.db, model=model, mail=mail)
+    return dict(app=app, db=db.db, model=model, queue=queue, mail=mail)
 manager.add_command("shell", Shell(make_context=make_shell_context))
 
 @MigrateCommand.command

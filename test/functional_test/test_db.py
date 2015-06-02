@@ -1,5 +1,5 @@
 from nose.tools import *
-from . import *
+from . import clean_db
 from icoin.core.db import db
 from icoin.core.model import Page
 

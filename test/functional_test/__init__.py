@@ -21,7 +21,13 @@ def clean_db():
     # for example using templates or rollback
     with contextlib.closing(db.engine.connect()) as conn:
         trans = conn.begin()
+        
+        tables = reversed(db.metadata.sorted_tables)
         for table in reversed(db.metadata.sorted_tables):
             conn.execute(table.delete())
+
+        # delete additional tables
+        conn.execute("DELETE FROM queue;")
+
         trans.commit()
 
