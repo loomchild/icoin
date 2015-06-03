@@ -1,25 +1,20 @@
 from time import sleep
 from nose.tools import *
-from . import clean_db
-from icoin.core.queue import pq
+from icoin.core.queue import task, wait
+
 
 class TestQueue:
 
     def setUp(self):
-        clean_db()
-    
+        self.data = None
+
+    def func(self, a, b):
+        self.data = (a, b)
+
     def test_queue(self):
-        queue = pq['test']
-        
-        queue.put({"k1" : "v1"})
-        queue.put({"k2" : "v2", "k3" : ["v3.1", "v3.2"]})
-        
-        task1 = queue.get()
-        eq_("v1", task1.data["k1"])
+        task(self.func, 1, b=2)
 
-        task2 = queue.get()
-        eq_("v2", task2.data["k2"])
-        eq_(["v3.1", "v3.2"], task2.data["k3"])
+        sleep(0.1)
 
-        eq_(None, queue.get())
+        eq_((1,2), self.data)
 

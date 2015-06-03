@@ -1,49 +1,39 @@
-from psycopg2 import connect
-from psycopg2.pool import ThreadedConnectionPool
-from pq import PQ
+from queue import Queue
+from threading import Thread
 from icoin import app
 
-pq = None
+# Based on http://code.activestate.com/recipes/577187-python-thread-pool/
+
+
+queue = None
 
 def init():
-    global pq
+    global queue
+    threads = 1
+    queue = Queue()
+    for _ in range(threads): 
+        Worker(queue)
 
-    dsn = get_dsn(app.config["DB_USER"], app.config["DB_PASSWORD"], 
-        app.config["DB_HOST"], app.config["DB_PORT"], app.config["DB_NAME"])
-    pool = ThreadedConnectionPool(0, 2, dsn) 
+def task(func, *args, **kwargs):
+    queue.put((func, args, kwargs))
     
-    pq = PQ(pool=pool)
+def wait():
+    queue.join()
 
-    create_schema(dsn)
+class Worker(Thread):
+    """Thread executing tasks from a given tasks queue"""
+    def __init__(self, queue):
+        Thread.__init__(self)
+        self.queue = queue
+        self.daemon = True
+        self.start()
     
-
-def create_schema(dsn):
-    "Create queue schema if it does not exist"
-    with connect(dsn) as conn:
-        with conn.cursor() as cur:
-            cur.execute("SELECT to_regclass('queue');")
-            row = cur.fetchone()
-            if not row[0]:
-                app.logger.info("Creating queue schema")
-                pq.create()
-
-def get_dsn(user, password, host, port, name):
-    dsn = ""
-
-    if user:
-        dsn += " user=" + user
-        
-    if password:
-        dsn += " password=" + password
-        
-    if host:
-        dsn += " host=" + host
-        
-    if port:
-        dsn += " port=" + port
-        
-    if name:
-        dsn += " dbname=" + name
-    
-    return dsn
+    def run(self):
+        while True:
+            func, args, kwargs = self.queue.get()
+            try: 
+                func(*args, **kwargs)
+            except Exception as e: 
+                app.logger.warn("Error processing task", e)
+            self.queue.task_done()
 

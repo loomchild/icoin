@@ -26,8 +26,5 @@ def clean_db():
         for table in reversed(db.metadata.sorted_tables):
             conn.execute(table.delete())
 
-        # delete additional tables
-        conn.execute("DELETE FROM queue;")
-
         trans.commit()
 
