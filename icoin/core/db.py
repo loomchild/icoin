@@ -6,7 +6,7 @@ from sqlalchemy.dialects.postgresql import UUID
 from flask.ext.migrate import Migrate
 
 from icoin import app
-from .model import Page
+from .model import User, Page
 
 
 db = SQLAlchemy()
@@ -60,6 +60,20 @@ def get_url(user, password, host, port, name):
         string += "/" + name
 
     return string
+
+
+
+
+user_table = db.Table('user',
+    db.Column('user_id', UUID(as_uuid=True), primary_key=True, default=uuid.uuid4),
+    db.Column('email', db.String(256), nullable=False),
+    db.Column('name', db.String(128), nullable=False),
+    db.Column('password_hash', db.String(128), nullable=True)
+)
+
+db.Index('idx_user_email', user_table.c.email, unique=True)
+
+mapper(User, user_table)
 
 
 page_table = db.Table('page', 

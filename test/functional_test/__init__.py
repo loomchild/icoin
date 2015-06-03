@@ -7,7 +7,6 @@ from icoin.core.config import DefaultConfig
 def init():
     name = os.environ.get("DB_NAME", DefaultConfig.DB_NAME)
     os.environ["TESTING"] = "1"
-    os.environ["DEBUG"] = "1"
     os.environ["DB_NAME"] = name + "_test"
     core.init()
     db.drop_all()
