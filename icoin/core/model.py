@@ -19,7 +19,7 @@ class User:
         return False
 
     def get_id(self):
-        return unicode(self.user_id)
+        return str(self.user_id)
 
     @property
     def password(self):
