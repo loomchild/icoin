@@ -30,7 +30,7 @@ class Worker(Thread):
     
     def run(self):
         while True:
-            func, args, kwargs = self.queue.get()
+            func, args, kwargs = self.queue.get(block=True)
             try: 
                 func(*args, **kwargs)
             except Exception as e: 
