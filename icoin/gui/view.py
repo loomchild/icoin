@@ -6,7 +6,7 @@ from icoin.core.image import get_image
 from icoin.core.db import db
 from icoin.core.model import User
 from . import gui
-from .form import LoginForm, CreatePledgeForm, ClaimPageForm
+from .form import LoginForm, RegisterForm, CreatePledgeForm, ClaimPageForm
 
 
 login_manager = LoginManager()
@@ -47,6 +47,17 @@ def logout():
     logout_user()
     flash('You have been logged out.')
     return redirect("/")
+
+@gui.route('/register', methods=['GET', 'POST'])
+def register():
+    form = RegisterForm()
+    if form.validate_on_submit():
+        user = User(form.email.data, form.name.data, form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        flash('Account has been registered, please log in.')
+        return redirect(url_for(".login"))
+    return render_template('register.html', form=form)
 
 
 @gui.route('/', methods=['GET'])
