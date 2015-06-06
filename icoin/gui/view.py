@@ -37,7 +37,7 @@ def login():
         if user is not None and user.verify_password(form.password.data):
             login_user(user)
             next = request.values.get('next')
-            return redirect(next or "/")
+            return redirect(next or url_for(".create_pledge"))
         flash('Invalid username or password.')
     return render_template('login.html', form=form)
 
