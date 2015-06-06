@@ -6,7 +6,7 @@ from sqlalchemy.dialects.postgresql import UUID
 from flask.ext.migrate import Migrate
 
 from icoin import app
-from .model import User, Page
+from .model import User, Page, Pledge
 
 
 db = SQLAlchemy()
@@ -82,5 +82,23 @@ page_table = db.Table('page',
     db.Column('domain', db.String(256), nullable=False),
 )
 
+db.Index('idx_page_url', page_table.c.url, unique=True)
+
 mapper(Page, page_table)
+
+
+pledge_table = db.Table('pledge', 
+    db.Column('pledge_id', UUID(as_uuid=True), primary_key=True, default=uuid.uuid4),
+    db.Column('user_id', UUID(as_uuid=True), 
+        db.ForeignKey(user_table.c.user_id), nullable=False),
+    db.Column('page_id', UUID(as_uuid=True), 
+        db.ForeignKey(page_table.c.page_id), nullable=False),
+    db.Column('amount', db.Integer(), nullable=False),
+    
+)
+
+mapper(Pledge, pledge_table, properties={
+    'user': db.relationship(User, lazy="joined"),
+    'page': db.relationship(Page, lazy="joined"),
+})
 

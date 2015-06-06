@@ -4,7 +4,7 @@ from flask_bootstrap import Bootstrap
 from flask.ext.login import LoginManager, login_required, login_user, logout_user, current_user
 from icoin.core.image import get_image
 from icoin.core.db import db
-from icoin.core.model import User
+from icoin.core.model import User, Page, Pledge
 from . import gui
 from .form import LoginForm, RegisterForm, CreatePledgeForm, ClaimPageForm
 
@@ -69,33 +69,38 @@ def index():
 def create_pledge():
     form = CreatePledgeForm()
     if form.validate_on_submit():
-        url = form.url
+        #TODO: support update existing pledge, block duplicates
+        url = form.url.data
         amount = form.amount.data
-        
-        pledgeid = "abcdef0123456789"
+ 
+        page = db.session.query(Page).filter_by(url=url).first()
+        if not page:
+            page = Page(url)
+            db.session.add(page)
 
-        return redirect(url_for('.pledge', pledgeid = pledgeid))
+        pledge = Pledge(current_user, page, amount)
+        db.session.add(pledge)
+        db.session.commit()   
+
+        return redirect(url_for('.pledge', pledge_id=str(pledge.pledge_id)))
     return render_template('create_pledge.html', form=form)
 
-#TODO: move to API
-@gui.route("/pledge/<pledgeid>.html", methods=['GET', 'POST'])
+@gui.route("/pledge/<pledge_id>.html", methods=['GET', 'POST'])
 @login_required
-def pledge(pledgeid):
-    # TODO: check of logged user, maybe in view
-    #host = "http://localhost:8080"
-    host = "https://icoin.ngrok.io"
-    pageid = '9876543210fedcba'
-    image = "[![1€]({0}/pledge/{1}.png)]({0}/page/{2}.html)" \
-            .format(host, pledgeid, pageid)
-    
+def pledge(pledge_id):
+    # TODO: check if logged user, maybe in view
+    pledge = db.session.query(Pledge).get(pledge_id)
+    image_url = url_for('.pledge_image', pledge_id=pledge_id, _external=True)
+    page_url = url_for('.page', page_id=pledge.page_id, _external=True)
+    image = "[![{0}€]({1})]({2})".format(pledge.amount, image_url, page_url)
     return render_template('pledge.html', image=image)
 
-@gui.route("/pledge/<pledgeid>.png", methods=['GET'])
-def pledge_image(pledgeid):
-    #from pprint import pprint; pprint(vars(request))
+#TODO: move to API
+@gui.route("/pledge/<pledge_id>.png", methods=['GET'])
+def pledge_image(pledge_id):
+    pledge = db.session.query(Pledge).get(pledge_id)
 
-    amount = 2
-    response = send_file(get_image(amount), mimetype='image/png')
+    response = send_file(get_image(pledge.amount), mimetype='image/png')
     
     response.cache_control.no_cache = True
     response.cache_control.max_age = None
@@ -105,21 +110,21 @@ def pledge_image(pledgeid):
     response.headers['Pragma'] = 'no-cache'
     response.headers['ETag'] = '"{}"'.format(int(round(time.time() * 1000)))
 
-    
     return response
 
-#TODO: add domain to page url to easie identify fraud
-@gui.route("/page/<pageid>.html", methods=['GET', 'POST'])
+#TODO: add domain to page url to easily identify fraud
+@gui.route("/page/<page_id>.html", methods=['GET', 'POST'])
 @login_required
-def page(pageid):
-    #from IPython import embed; embed()
-    url = 'http://example.com/page1.html'
-    amount = 2
+def page(page_id):
+    page = db.session.query(Page).get(page_id)
+    pledges = db.session.query(Pledge).filter_by(page_id=page_id).all()
+    amount = sum(map(lambda pledge: pledge.amount, pledges))
+
     form = ClaimPageForm()
     if form.validate_on_submit():
         if form.yes.data:
             flash("You have claimed the page")
         else:
             flash("Nothing claimed")
-    return render_template('page.html', form=form, url=url, amount=amount)
+    return render_template('page.html', form=form, url=page.url, amount=amount)
 

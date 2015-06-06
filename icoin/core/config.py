@@ -11,6 +11,9 @@ class DefaultConfig:
     DEBUG = False
     TESTING = False
 
+    SERVER_NAME = None
+    APPLICATION_ROOT = None
+
     SECRET_KEY = os.urandom(24)
     
     DB_HOST = "localhost"

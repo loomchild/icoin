@@ -8,7 +8,6 @@ class User:
         self.name = name
         self.password = password
 
-    # Flask-Login integration
     def is_authenticated(self):
         return True
 
@@ -37,6 +36,12 @@ class User:
             return False
         return check_password_hash(self.password_hash, password)
 
+class Pledge:
+    
+    def __init__(self, user, page, amount):
+        self.user = user
+        self.page = page
+        self.amount = amount
 
 class Page:
 
