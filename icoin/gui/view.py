@@ -92,8 +92,13 @@ def pledge(pledge_id):
     pledge = db.session.query(Pledge).get(pledge_id)
     image_url = url_for('.pledge_image', pledge_id=pledge_id, _external=True)
     page_url = url_for('.page', page_id=pledge.page_id, _external=True)
-    image = "[![{0}€]({1})]({2})".format(pledge.amount, image_url, page_url)
-    return render_template('pledge.html', image=image)
+    
+    #TODO: convert to Jinja
+    html = '<a href="{0}"><img src="{1}" alt="{2}€"/></a>'.format(
+            page_url, image_url, pledge.amount)
+    markdown = "[![{0}€]({1})]({2})".format(pledge.amount, image_url, page_url)
+    
+    return render_template('pledge.html', html=html, markdown=markdown)
 
 #TODO: move to API
 @gui.route("/pledge/<pledge_id>.png", methods=['GET'])
