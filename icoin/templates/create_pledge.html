@@ -8,8 +8,8 @@
 	<h1>Pledge</h1>
 </div>
 
-<div class="col-md-6">
-	{{ wtf.quick_form(form) }}
+<div class="row">
+	{{ wtf.quick_form(form, extra_classes = ('createpledge'), button_map={'submit': 'success'}) }}
 </div>
 {% endblock %}
 

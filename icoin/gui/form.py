@@ -23,7 +23,7 @@ class RegisterForm(Form):
 class CreatePledgeForm(Form):
     url = StringField('URL')
     amount = SelectField('Amount', choices = [("1", "1€"), ("2", "2€")], default = '1')
-    submit = SubmitField('Submit')
+    submit = SubmitField('Pledge')
 
 class ClaimPageForm(Form):
     yes = SubmitField('Yes')
