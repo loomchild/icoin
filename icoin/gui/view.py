@@ -2,6 +2,7 @@ import time
 from flask import redirect, render_template, request, url_for, flash, abort, send_file
 from flask_bootstrap import Bootstrap
 from flask.ext.login import LoginManager, login_required, login_user, logout_user, current_user
+from icoin.util import to_uuid
 from icoin.core.image import get_image
 from icoin.core.db import db
 from icoin.core.model import User, Page, Pledge
@@ -121,7 +122,16 @@ def pledge_image(pledge_id):
 @gui.route("/page/<page_id>.html", methods=['GET', 'POST'])
 @login_required
 def page(page_id):
+    #TODO: add global id UUID validation
+    page_id = to_uuid(page_id)
+    if not page_id:
+        abort(404)
+
     page = db.session.query(Page).get(page_id)
+
+    if not page:
+        abort(404)
+
     pledges = db.session.query(Pledge).filter_by(page_id=page_id).all()
     amount = sum(map(lambda pledge: pledge.amount, pledges))
 
