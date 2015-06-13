@@ -36,6 +36,12 @@ class User:
             return False
         return check_password_hash(self.password_hash, password)
 
+class Page:
+
+    def __init__(self, url):
+        self.url = url
+        self.domain = 'unknown'
+
 class Pledge:
     
     def __init__(self, user, page, amount):
@@ -43,9 +49,9 @@ class Pledge:
         self.page = page
         self.amount = amount
 
-class Page:
+class Claim:
 
-    def __init__(self, url):
-        self.url = url
-        self.domain = 'unknown'
+    def __init__(self, user, page):
+        self.user = user
+        self.page = page
 
