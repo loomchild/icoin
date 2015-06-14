@@ -5,7 +5,7 @@ from flask.ext.login import LoginManager, login_required, login_user, logout_use
 from icoin.util import to_uuid
 from icoin.core.image import get_image
 from icoin.core.db import db
-from icoin.core.model import User, Page, Pledge
+from icoin.core.model import User, Page, Pledge, Claim
 from . import gui
 from .form import LoginForm, RegisterForm, CreatePledgeForm, ClaimPageForm
 
@@ -132,14 +132,22 @@ def page(page_id):
     if not page:
         abort(404)
 
+    claim = db.session.query(Claim).filter_by(
+            page_id=page_id, user_id=current_user.user_id).first()
+
     pledges = db.session.query(Pledge).filter_by(page_id=page_id).all()
     amount = sum(map(lambda pledge: pledge.amount, pledges))
 
     form = ClaimPageForm()
     if form.validate_on_submit():
-        if form.yes.data:
+        if form.claim.data:
+            #TODO: convert to business logic actions, send emails, etc.
+            # maybe directly in model, with constructors?
+            claim = Claim(current_user, page)
+            db.session.add(claim)
+            db.session.commit()
             flash("You have claimed the page")
         else:
-            flash("Nothing claimed")
-    return render_template('page.html', form=form, url=page.url, amount=amount)
+            return redirect(page.url)
 
+    return render_template('page.html', form=form, url=page.url, amount=amount, claim=claim)

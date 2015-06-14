@@ -26,5 +26,5 @@ class CreatePledgeForm(Form):
     submit = SubmitField('Pledge')
 
 class ClaimPageForm(Form):
-    yes = SubmitField('Yes')
-    no = SubmitField('No')
+    claim = SubmitField('Claim')
+    cancel = SubmitField('Cancel')

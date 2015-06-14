@@ -9,8 +9,12 @@
 </div>
 
 <div class="col-md-12">
-	<p>Would you like to claim {{amount}}€ from {{url}}?</p>
-	{{ wtf.quick_form(form, button_map={'yes': 'success', 'no': 'danger'}) }}
+{% if not claim %}
+	<p>Would you like to claim {{amount}}€ from this page?</p>
+	{{ wtf.quick_form(form, button_map={'claim': 'success', 'cancel': 'danger'}) }}
+{% else %}
+	<p>You have already claimed {{amount}}€ from this page.</p>
+{% endif %}
 </div>
 
 {% endblock %}

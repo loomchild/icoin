@@ -115,3 +115,6 @@ mapper(Claim, claim_table, properties={
     'page': db.relationship(Page, lazy="joined"),
 })
 
+db.Index('idx_claim_page_id_user_id', 
+        claim_table.c.page_id, claim_table.c.user_id, unique=True)
+
