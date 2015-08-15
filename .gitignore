@@ -1,4 +1,4 @@
 *.pyc
 .*.sw?
-venv/
+env/
 private/
