@@ -14,7 +14,7 @@ class DefaultConfig:
     SERVER_NAME = None
     APPLICATION_ROOT = None
 
-    SECRET_KEY = os.urandom(24)
+    SECRET_KEY = b"icoin"
     
     DB_HOST = "localhost"
     DB_PORT = "5432"
@@ -64,7 +64,5 @@ def get_env_vars():
 
 def validate():
     if app.config["SECRET_KEY"] == DefaultConfig.SECRET_KEY:
-        app.logger.warning("No SECRET_KEY provided, generated a random one. " +
-                "Sessions are valid only for this instance and will expire " +
-                "after restart.")
+        app.logger.warning("No SECRET_KEY provided, using the default one.")
 
