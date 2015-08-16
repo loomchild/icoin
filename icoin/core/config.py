@@ -37,6 +37,8 @@ def init():
     
     app.config['VERSION'] = get_version()
 
+    update_docker_vars()
+
     validate()
 
 
@@ -61,6 +63,16 @@ def get_env_vars():
             #TODO: cast to the same type as in DeaultConfig
             env_vars[name] = value
     return env_vars
+
+def update_docker_vars():
+    if not os.path.isfile("/.dockerinit"):
+        return
+    
+    app.config["DB_HOST"] = "db"
+    app.config["DB_PORT"] = "5432"
+    app.config["DB_USER"] = "postgres"
+    app.config["DB_NAME"] = "icoin"
+    
 
 def validate():
     if app.config["SECRET_KEY"] == DefaultConfig.SECRET_KEY:

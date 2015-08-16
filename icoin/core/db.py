@@ -62,8 +62,6 @@ def get_url(user, password, host, port, name):
     return string
 
 
-
-
 user_table = db.Table('user',
     db.Column('user_id', UUID(as_uuid=True), primary_key=True, default=uuid.uuid4),
     db.Column('name', db.String(128), nullable=False),
