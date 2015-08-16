@@ -8,11 +8,14 @@ from icoin import app
 from .model import User
 from .db import db
 from .config import DefaultConfig
+from .mail import send
  
 
-security = Security()
+security = None
 
 def init():
+    global security
+
     app.config['SECURITY_REGISTERABLE'] = True
     app.config['SECURITY_CONFIRMABLE'] = True
     app.config['SECURITY_PASSWORD_HASH'] = "bcrypt"
@@ -26,8 +29,10 @@ def init():
 
     app.config['SECURITY_EMAIL_SENDER'] = app.config['MAIL_DEFAULT_SENDER']
 
-    security.init_app(app, IcoinUserDatastore(),
+    security = Security(app, IcoinUserDatastore(), 
             confirm_register_form=IcoinRegisterForm)
+
+    security.send_mail_task(send_security_mail)
 
 
 class IcoinUserDatastore(SQLAlchemyDatastore, UserDatastore):
@@ -57,3 +62,6 @@ class IcoinRegisterForm(RegisterForm):
     
     name = StringField('Name', validators=[Required(), Length(1, 64), 
             Regexp(r'^[A-Za-z0-9_\- ]+$', 0, 'Name must have only letters, numbers, spaces, dots, dashes or underscores')])
+
+def send_security_mail(message):
+    send(message=message)

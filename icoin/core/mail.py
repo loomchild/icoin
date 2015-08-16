@@ -9,8 +9,13 @@ mail = Mail()
 def init():
     mail.init_app(app)
 
-def send(recipient, subject, template, async=True, **kwargs):
-    message = create_message(recipient, subject, template, **kwargs)
+def send(recipient=None, subject=None, template=None, message=None, async=True, **kwargs):
+    if not (message or (recipient and subject and template)):
+        raise ValueError("Provide recipient, subject, template or message")
+
+    if not message:
+        message = create_message(recipient, subject, template, **kwargs)
+    
     if async:
         task(send_message, app, message)
     else:
