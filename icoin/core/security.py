@@ -14,6 +14,7 @@ security = Security()
 
 def init():
     app.config['SECURITY_REGISTERABLE'] = True
+    app.config['SECURITY_CONFIRMABLE'] = True
     app.config['SECURITY_PASSWORD_HASH'] = "bcrypt"
     
     # Update all salts with SECRET_KEY if they are not set
@@ -23,8 +24,10 @@ def init():
             'SECURITY_REMEMBER_SALT'):
         app.config[salt] = app.config.get(salt, secret_key)
 
+    app.config['SECURITY_EMAIL_SENDER'] = app.config['MAIL_DEFAULT_SENDER']
+
     security.init_app(app, IcoinUserDatastore(),
-            register_form=IcoinRegisterForm)
+            confirm_register_form=IcoinRegisterForm)
 
 
 class IcoinUserDatastore(SQLAlchemyDatastore, UserDatastore):
@@ -51,6 +54,6 @@ class IcoinUserDatastore(SQLAlchemyDatastore, UserDatastore):
         return None
 
 class IcoinRegisterForm(RegisterForm):
+    
     name = StringField('Name', validators=[Required(), Length(1, 64), 
             Regexp(r'^[A-Za-z0-9_\- ]+$', 0, 'Name must have only letters, numbers, spaces, dots, dashes or underscores')])
-
