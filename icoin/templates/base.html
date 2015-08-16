@@ -23,16 +23,16 @@
     <div class="container">
         <div class="navbar-header">
 			<span class="navbar-brand">
-				<a href="{{ url_for('.index') }}"><img src="{{ url_for('static', filename='images/logo.png') }}"/></a>
+				<a href="{{ url_for('gui.index') }}"><img src="{{ url_for('static', filename='images/logo.png') }}"/></a>
 			<span>
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
                 {% if current_user.is_authenticated() %}
-                <li><a href="{{ url_for('.logout') }}">Log Out</a></li>
+                <li><a href="{{ url_for('security.logout') }}">Log Out</a></li>
                 {% else %}
-                <li><a href="{{ url_for('.login') }}">Log In</a></li>
-                <li><a href="{{ url_for('.register') }}">Register</a></li>
+                <li><a href="{{ url_for('security.login') }}">Log In</a></li>
+                <li><a href="{{ url_for('security.register') }}">Register</a></li>
                 {% endif %}
             </ul>
         </div>

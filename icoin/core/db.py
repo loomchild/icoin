@@ -66,9 +66,11 @@ def get_url(user, password, host, port, name):
 
 user_table = db.Table('user',
     db.Column('user_id', UUID(as_uuid=True), primary_key=True, default=uuid.uuid4),
-    db.Column('email', db.String(256), nullable=False),
     db.Column('name', db.String(128), nullable=False),
-    db.Column('password_hash', db.String(128), nullable=True)
+    db.Column('email', db.String(256), nullable=False),
+    db.Column('password', db.String(256), nullable=True),
+    db.Column('active', db.Boolean()),
+    db.Column('confirmed_at', db.DateTime()),
 )
 
 db.Index('idx_user_email', user_table.c.email, unique=True)

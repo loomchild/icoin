@@ -1,40 +1,25 @@
-from werkzeug.security import generate_password_hash, check_password_hash
+from flask.ext.security import UserMixin
 
 
-class User:
+class User(UserMixin):
     
-    def __init__(self, email, name, password=None):
-        self.email = email
+    def __init__(self, name, email, password, active, roles):
         self.name = name
+        self.email = email
         self.password = password
-
-    def is_authenticated(self):
-        return True
-
-    def is_active(self):
-        return True
-
-    def is_anonymous(self):
-        return False
-
-    def get_id(self):
-        return str(self.user_id)
+        self.active = active
+    
+    @property
+    def id(self):
+        return self.user_id
 
     @property
-    def password(self):
-        raise AttributeError('password is not a readable attribute')
-    
-    @password.setter
-    def password(self, password):
-        if password == None:
-            self.password_hash = None
-        else:
-            self.password_hash = generate_password_hash(password)
+    def roles(self):
+        return []
 
-    def verify_password(self, password):
-        if password == None or self.password_hash == None:
-            return False
-        return check_password_hash(self.password_hash, password)
+    @roles.setter
+    def roles(self, role):
+        pass
 
 class Page:
 

@@ -1,65 +1,25 @@
 import time
 from flask import redirect, render_template, request, url_for, flash, abort, send_file
 from flask_bootstrap import Bootstrap
-from flask.ext.login import LoginManager, login_required, login_user, logout_user, current_user
+from flask_security.core import current_user
+from flask_security.decorators import login_required
 from icoin.util import to_uuid
 from icoin.core.image import get_image
 from icoin.core.db import db
 from icoin.core.model import User, Page, Pledge, Claim
 from . import gui
-from .form import LoginForm, RegisterForm, CreatePledgeForm, ClaimPageForm
-
-
-login_manager = LoginManager()
-login_manager.session_protection = 'strong'
-login_manager.login_view = '.login'
+from .form import CreatePledgeForm, ClaimPageForm
 
 
 @gui.record_once
 def record_once(state):
     app = state.app
-    login_manager.init_app(app)
     Bootstrap(app)
     app.config['BOOTSTRAP_SERVE_LOCAL'] = True
-
-@login_manager.user_loader
-def load_user(user_id):
-    return db.session.query(User).get(user_id)
 
 @gui.context_processor
 def utility_processor():
     return dict(current_user=current_user)
-
-@gui.route('/login', methods=['GET', 'POST'])
-def login():
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = db.session.query(User).filter_by(email=form.email.data).first()
-        if user is not None and user.verify_password(form.password.data):
-            login_user(user)
-            next = request.values.get('next')
-            return redirect(next or url_for(".create_pledge"))
-        flash('Invalid username or password.')
-    return render_template('login.html', form=form)
-
-@gui.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    flash('You have been logged out.')
-    return redirect("/")
-
-@gui.route('/register', methods=['GET', 'POST'])
-def register():
-    form = RegisterForm()
-    if form.validate_on_submit():
-        user = User(form.email.data, form.name.data, form.password.data)
-        db.session.add(user)
-        db.session.commit()
-        flash('Account has been registered, please log in.')
-        return redirect(url_for(".login"))
-    return render_template('register.html', form=form)
-
 
 @gui.route('/', methods=['GET'])
 def index():
