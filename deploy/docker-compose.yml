@@ -4,6 +4,7 @@ web:
         - "8001:8080"
     links:
         - db
+    env_file: .env
 db:
     image: postgres
 
