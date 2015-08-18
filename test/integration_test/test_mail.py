@@ -1,5 +1,4 @@
 from time import sleep
-from nose.tools import *
 from icoin import app
 from icoin.core.mail import mail, send
 
@@ -9,18 +8,18 @@ class TestMail:
         with app.app_context(), mail.record_messages() as outbox:
             send("test@test.com", "subjectnow", "test", async=False)
 
-            eq_(1, len(outbox))
-            eq_("subjectnow", outbox[0].subject)
+            assert len(outbox) == 1
+            assert outbox[0].subject == "subjectnow"
     
     def test_send_async(self):    
         with app.app_context(), mail.record_messages() as outbox:
             send("test@test.com", "subject", "test")
             
             # message is not sent immediately
-            eq_(0, len(outbox))
+            assert len(outbox) == 0
 
             sleep(0.1)
 
-            eq_(1, len(outbox))
-            eq_("subject", outbox[0].subject)
+            assert len(outbox) == 1
+            assert outbox[0].subject == "subject"
 

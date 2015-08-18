@@ -1,4 +1,4 @@
 -r requirements.txt
-nose2[coverage-plugin]
+pytest
 ipython
 reload

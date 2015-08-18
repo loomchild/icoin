@@ -1,4 +1,3 @@
-from nose.tools import *
 from . import clean_db
 from icoin.core.db import db
 from icoin.core.model import Page
@@ -15,6 +14,6 @@ class TestDB:
         db.session.commit()
 
         pages = db.session.query(Page).all()
-        eq_([page], pages)
+        assert [page] == pages
 
 

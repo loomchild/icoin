@@ -1,5 +1,4 @@
 from time import sleep
-from nose.tools import *
 from icoin.core.queue import task, wait
 
 
@@ -16,5 +15,5 @@ class TestQueue:
 
         sleep(0.1)
 
-        eq_((1,2), self.data)
+        assert self.data == (1,2)
 

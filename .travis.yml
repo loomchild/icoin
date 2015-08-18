@@ -9,5 +9,5 @@ before_script:
 
 install: "pip install -r requirements-dev.txt"
 
-script: nose2
+script: py.test
  
