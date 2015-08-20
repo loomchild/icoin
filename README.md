@@ -19,5 +19,5 @@ Access icoin:
 
 	docker-machine ls 
 
-Take the IP address of your machine and go to <IP>:8080 to access the system and <IP>:8025 to access the emails.
+Take the IP address of your machine and go to IP:8080 to access the system and IP:8025 to access the emails.
 The ports can also be forwarded.
