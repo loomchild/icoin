@@ -13,7 +13,7 @@ Deploy icoin and its dependencies:
 
     cd deploy/dev
 	docker-compose build
-	docker-compose up-d
+	docker-compose up -d
 
 Access icoin:
 
