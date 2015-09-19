@@ -15,6 +15,12 @@ Deploy icoin and its dependencies:
 	docker-compose build
 	docker-compose up -d
 
+Set-up database
+
+	docker exec -i -t dev_web_1 bash
+	./icoin.py db create
+	./icoin.py db upgrade
+
 Access icoin:
 
 	docker-machine ls 
