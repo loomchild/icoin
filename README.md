@@ -17,7 +17,7 @@ Deploy icoin and its dependencies:
 
 Access icoin:
 
-	docker-machine ls 
+	docker-machine ip dev
 
 Take the IP address of your machine and go to IP:8080 to access the system and IP:8025 to access the emails.
 The ports can also be forwarded.
