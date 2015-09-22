@@ -15,15 +15,15 @@ Deploy icoin and its dependencies:
 	docker-compose build
 	docker-compose up -d
 
-Set-up database
-
-	docker exec -i -t dev_web_1 bash
-	./icoin.py db create
-	./icoin.py db upgrade
-
 Access icoin:
 
 	docker-machine ls 
 
 Take the IP address of your machine and go to IP:8080 to access the system and IP:8025 to access the emails.
 The ports can also be forwarded.
+
+To execute icoin commands, you can enter the container:
+
+	docker exec -i -t dev_web_1 bash
+	./icoin.py db upgrade
+

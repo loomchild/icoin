@@ -12,6 +12,7 @@ web:
         - DB_USER=postgres
         - MAIL_SERVER=mail
         - MAIL_PORT=1025
+    command: sh -c "python3 -u icoin.py db create ; python3 -u icoin.py db upgrade ; python3 -u icoin.py server"
 
 db:
     image: postgres
