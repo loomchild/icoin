@@ -29,6 +29,8 @@ def init():
 
     app.config['SECURITY_EMAIL_SENDER'] = app.config['MAIL_DEFAULT_SENDER']
 
+    app.config['SECURITY_POST_LOGIN_VIEW'] = "/pledge.html"
+
     security = Security(app, IcoinUserDatastore(), 
             confirm_register_form=IcoinRegisterForm)
 
