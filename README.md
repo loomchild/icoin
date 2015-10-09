@@ -12,7 +12,6 @@ Create docker machine:
 Deploy icoin and its dependencies:
 
     cd deploy/dev
-	docker-compose build
 	docker-compose up -d
 
 Access icoin:
@@ -27,3 +26,6 @@ To execute icoin commands, you can enter the container:
 	docker exec -i -t dev_web_1 bash
 	./icoin.py db upgrade
 
+Update docker images:
+
+	docker-compose pull
